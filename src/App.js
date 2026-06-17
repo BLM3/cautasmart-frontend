@@ -40,6 +40,9 @@ function App() {
                     compareItems={compareItems}
                     setCompareItems={setCompareItems}
                 />
+            <footer className="w-full text-center py-6 mt-10 border-t border-gray-200 dark:border-gray-800 text-gray-500 dark:text-gray-400 text-sm">
+                <p>Copyright © {new Date().getFullYear()} Cautasmart.ro. Toate drepturile rezervate.</p>
+            </footer>
         </div>
       );
 }
