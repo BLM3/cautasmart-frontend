@@ -20,7 +20,7 @@ function Navbar({favorites = [],setShowFavorites} ) {
            <div className="max-w-7xl mx-auto px-4 h-16 flex justify-between items-center">
 
                 <h1 className="text-xl sm:text-2xl font-black text-blue-600 dark:text-blue-400 tracking-tight cursor-pointer" onClick={() => setShowFavorites(false)}>
-                Smart Find
+                 Detectorul de Oferte
             </h1>
 
             <div className="flex items-center gap-3 sm:gap-6">

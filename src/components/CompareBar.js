@@ -12,7 +12,7 @@ function CompareBar({ compareItems=[], setCompareItems }) {
             {/* BARA DE JOS FIXĂ */}
             <div className="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-900 shadow-[0_-5px_15px_rgba(0,0,0,0.1)] dark:shadow-[0_-5px_15px_rgba(0,0,0,0.5)] p-3 border-t border-gray-200 dark:border-gray-800 z-40 flex flex-row justify-between items-center gap-2 transition-colors duration-300">
                 <div className="flex items-center gap-2 overflow-x-auto no-scrollbar">
-                    <span className="font-bold text-xs sm:text-sm text-gray-700 dark:text-gray-300 whitespace-nowrap">Comparație ({compareItems.length}/3):</span>
+                    <span className="font-bold text-xs sm:text-sm text-gray-700 dark:text-gray-300 whitespace-nowrap">Comparație ({compareItems.length}/5):</span>
                     <div className="flex gap-1.5">
                         {compareItems.map(item => (
                             <div key={item.id} className="flex items-center gap-1 bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 px-2 py-1 rounded-lg text-[10px] sm:text-sm font-medium border border-blue-200 dark:border-blue-800 whitespace-nowrap">
