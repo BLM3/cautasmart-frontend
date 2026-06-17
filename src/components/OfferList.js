@@ -149,6 +149,13 @@ function OfferList({favorites, setFavorites, compareItems, setCompareItems}) {
         localStorage.setItem("recentlyViewed", JSON.stringify(updated));
     };
 
+    const dynamicCategories = React.useMemo(() => {
+        if (!offers || offers.length === 0) return ['All'];
+        // Luăm câmpul 'category' de la fiecare produs
+        const extatredCategories = offers.map(o => o.category).filter(Boolean);
+        // Set elimină automat duplicatele, iar apoi adăugăm 'All' la început
+        return ['All', ...new Set(extatredCategories)];
+    }, [offers]);
     return (
 
         <div className="px-4">
@@ -160,9 +167,12 @@ function OfferList({favorites, setFavorites, compareItems, setCompareItems}) {
             />
             {/* Bara de Filtre și Sortare */}
             <FilterBar
-                category={category} setCategory={setCategory}
-                sortBy={sortBy} setSortBy={setSortBy}
+                category={category}
+                setCategory={setCategory}
+                sortBy={sortBy}
+                setSortBy={setSortBy}
                 setPage={setPage}
+                availableCategories={dynamicCategories}
             />
 
             {/* --- ÎMBUNĂTĂȚIREA 3: PASTILE FILTRE ACTIVE --- */}
