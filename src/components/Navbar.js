@@ -1,6 +1,6 @@
 import React, {useState,useEffect} from 'react';
 import { Heart,Home } from 'lucide-react';
-function Navbar({favorites = [],setShowFavorites} ) {
+function Navbar({favorites = [],setShowFavorites,setView} ) {
     // Starea pentru Dark Mode (verifică și preferința salvată în localStorage)
     const [darkMode, setDarkMode] = useState(() => {
         return localStorage.getItem("theme") === "dark";
@@ -26,7 +26,7 @@ function Navbar({favorites = [],setShowFavorites} ) {
             <div className="flex items-center gap-3 sm:gap-6">
                 <div className="flex items-center space-x-2 sm:space-x-4 font-semibold text-xs sm:text-sm text-gray-600 dark:text-gray-300">
                     <button className="relative flex h-9 px-2 sm:h-11 sm:px-3 items-center justify-center gap-1.5 rounded-xl border border-gray-200 bg-white text-gray-500 transition-all duration-200 hover:scale-105 hover:text-blue-500 hover:border-blue-200 active:scale-95 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:text-blue-400 dark:hover:border-blue-950/40"
-                            onClick={() =>setShowFavorites(false)}title="Acasă">
+                            onClick={() =>{setShowFavorites(false);setView("home");}} title="Acasă">
                         <Home size={16} className="sm:size-5" />
                         <span className="hidden sm:inline">Home</span>
                     </button>
