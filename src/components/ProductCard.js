@@ -1,10 +1,13 @@
 import React,{useState} from 'react';
 import toast from 'react-hot-toast';
-import { Heart, BarChart3 } from 'lucide-react';
+import { Heart, BarChart3, X, ExternalLink } from 'lucide-react';
 function ProductCard({ offer,favorites=[],setFavorites,compareItems=[],setCompareItems,addToRecentlyViewed }) {
+
     const isFavorite=favorites.some(item=>item.id===offer.id);
     const isCompared=compareItems.some(item=>item.id===offer.id);
     const [imageLoaded, setImageLoaded] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [activeImageIndex, setActiveImageIndex] = useState(0);
     const toggleFavorite=()=>{
         if(isFavorite){
             setFavorites(favorites.filter(item=>item.id !==offer.id));
@@ -25,9 +28,28 @@ function ProductCard({ offer,favorites=[],setFavorites,compareItems=[],setCompar
             toast.error('Poți compara maximum 5 produse simultan!');
         }
     }
-    return (
+    const handleOpenModal = () => {
+        setIsModalOpen(true);
+        if (addToRecentlyViewed) {
+            addToRecentlyViewed(offer);
+        }
+    };
+    const productImages = offer.images && Array.isArray(offer.images) && offer.images.length > 0
+        ? offer.images
+        : offer.imageUrl ? [offer.imageUrl] : [];
+    console.log("Produsel",offer);
+    const handlePrevImage = (e) => {
+        e.stopPropagation();
+        setActiveImageIndex((prev) => (prev === 0 ? productImages.length - 1 : prev - 1));
+    };
 
-        <div className="bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden flex flex-col relative border border-gray-100 dark:border-gray-700/50">
+    const handleNextImage = (e) => {
+        e.stopPropagation();
+        setActiveImageIndex((prev) => (prev === productImages.length - 1 ? 0 : prev + 1));
+    };
+    return (
+        <>
+        <div className="h-full bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden flex flex-col relative border border-gray-100 dark:border-gray-700/50">
             <div className="p-2 sm:p-4 flex justify-between items-center gap-2 bg-gray-50/50 dark:bg-gray-900/20 border-b border-gray-100 dark:border-gray-700/30">
                 {/* BADGE TOP RECOMANDAT*/}
                 <div>
@@ -39,7 +61,7 @@ function ProductCard({ offer,favorites=[],setFavorites,compareItems=[],setCompar
                     }
                 </div>
 
-                {/*favorites*/}
+                {/*favorites & compare*/}
                 <div className="flex items-center gap-2 sm:gap-3">
                     <button
                         onClick={toggleFavorite}
@@ -69,7 +91,7 @@ function ProductCard({ offer,favorites=[],setFavorites,compareItems=[],setCompar
                 </div>
             </div>
             {/* IMAGE CONTAINER FIX */}
-            <div className="w-full h-32 sm:h-48 bg-gray-200 dark:bg-gray-700/50 rounded-t-xl overflow-hidden flex items-center justify-center relative">
+            <div onClick={handleOpenModal} className="w-full h-32 sm:h-48 bg-gray-200 dark:bg-gray-700/50 rounded-t-xl overflow-hidden flex items-center justify-center relative">
                 {!imageLoaded && (
                     <div className="absolute inset-0 bg-gradient-to-r from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-600 animate-pulse flex items-center justify-center">
                         {/* O mică iconiță de imagine palidă pe fundal ca placeholder vizual */}
@@ -91,16 +113,37 @@ function ProductCard({ offer,favorites=[],setFavorites,compareItems=[],setCompar
             </div>
             {/* CONTENT */}
             <div className="p-3 sm:p-5 flex flex-col flex-1 justify-between">
-
-                <h2 className="text-xs sm:text-base font-bold text-gray-800 dark:text-gray-100 line-clamp-2 min-h-[2rem] sm:min-h-[3rem] leading-tight">
+                {/* Titlu produs (Click deschide popup-ul) */}
+                <h2 className="text-xm sm:text-xl font-extrabold text-gray-900 dark:text-gray-100 leading-tight cursor-pointer hover:text-blue-600 transition-colors tracking-tight mb-2 h-auto">
                     {offer.name}
                 </h2>
+                {/* Descriere trunchiată */}
+                <div onClick={handleOpenModal} className="mt-2 flex-grow min-h-[3rem] text-sm sm:text-base cursor-pointer mb-2">
+                    <p className="text-gray-600 dark:text-gray-300 leading-relaxed inline">
+                        {(() => {
+                            const description = offer.description && offer.description.trim() !== ""
+                                ? offer.description
+                                : "Nicio descriere disponibilă pentru acest produs premium.";
 
-                <p className="hidden sm:block text-xs text-gray-500 dark:text-gray-400 mt-1 line-clamp-2 min-h-[2.5rem] leading-relaxed">
-                    {offer.description && offer.description.trim() !== ""
-                        ? offer.description
-                        : "Nicio descriere disponibilă pentru acest produs premium."}
-                </p>
+                            // --- 💡 Logică de tăiere inteligentă la nivel de cuvinte ---
+                            const words = description.split(/\s+/); // Împărțim textul în cuvinte
+                            const WORD_LIMIT = 13; // Limita de cuvinte (aproximativ 2 rânduri de text mare)
+
+                            if (words.length > WORD_LIMIT) {
+                                // Dacă textul e mai lung, tăiem și lipim butonul în continuarea textului
+                                return (
+                                    <>{words.slice(0, WORD_LIMIT).join(" ").replace(/[\s.]+$/, '')}
+                                        <button onClick={(e) => { e.stopPropagation(); handleOpenModal(); }}
+                                            className="text-sm sm:text-base font-extrabold text-blue-500 hover:text-blue-600 dark:text-blue-400 hover:underline inline ml-1 whitespace-nowrap"> ...more
+                                        </button>
+                                    </>
+                                );
+                            } else {// Dacă e scurt, arătăm textul complet fără buton
+                                return description;
+                            }
+                        })()}
+                    </p>
+                </div>
                 {/* PRICE + RATING */}
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-1 mt-2 sm:mt-4 w-full min-h-[2.5rem] sm:min-h-[3.5rem]">
 
@@ -130,24 +173,129 @@ function ProductCard({ offer,favorites=[],setFavorites,compareItems=[],setCompar
                         ⭐ {offer.rating}
                     </span>
                 </div>
-                {/* CATEGORY */}
-                {/*<p className="text-[10px] uppercase tracking-wider text-gray-400 mt-2 font-semibold">*/}
-                {/*    {offer.category}*/}
-                {/*</p>*/}
                 {/* BUTTON */}
                 <a
                     href={offer.affiliateLink}
                     target="_blank"
                     rel="noopener noreferrer"
-                    onClick={() => addToRecentlyViewed(offer)} // Înregistrăm vizualizarea
+                    onClick={() => { if(addToRecentlyViewed) addToRecentlyViewed(offer); }} // Înregistrăm vizualizarea
                     className="mt-3 text-center bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg sm:rounded-xl text-xs sm:text-sm font-semibold transition shadow-sm block"
                 >
                     Vezi oferta ➔
                 </a>
-
             </div>
-
         </div>
+            {/* --- POPUP / MODAL --- */}
+            {isModalOpen && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
+                    <div className="absolute inset-0" onClick={() => setIsModalOpen(false)}></div>
+
+                    <div className="bg-white dark:bg-gray-800 rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto relative z-10 shadow-2xl flex flex-col md:flex-row border border-gray-100 dark:border-gray-700">
+
+                        {/* Buton Închidere */}
+                        <button
+                            onClick={() => setIsModalOpen(false)}
+                            className="absolute top-3 right-3 sm:top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 p-1.5 rounded-full bg-gray-100 dark:bg-gray-700 z-20 transition-colors"
+                        >
+                            <X size={18} />
+                        </button>
+
+                        {/* Stânga: Imagine */}
+                        <div className="w-full md:w-1/2 bg-gray-50 dark:bg-gray-900/40 p-6 flex flex-col items-center justify-center min-h-[280px] sm:min-h-[380px] relative group/carousel">
+                            {/*<img src={offer.imageUrl} alt={offer.name} className="max-h-60 object-contain rounded-lg" />*/}
+
+                            {productImages.length > 0 ? (
+                                <div className="w-full h-full flex flex-col items-center justify-center relative">
+                                    {/* Imaginea activă curentă */}
+                                    <img
+                                        src={productImages[activeImageIndex]}
+                                        alt={offer.images && Array.isArray(offer.images) && offer.images.length>0?(`${offer.name} - ${activeImageIndex + 1}`):(`${offer.name}`)}
+                                        className="max-h-60 sm:max-h-72 md:max-h-80 object-contain rounded-lg select-none transition-all duration-300"
+                                    />
+
+                                    {/* Navigație tip Săgeți (Se afișează doar dacă sunt mai multe imagini în array) */}
+                                    {productImages.length > 1 && (
+                                        <>
+                                            <button
+                                                onClick={handlePrevImage}
+                                                className="absolute left-0 p-2 rounded-full bg-white/90 dark:bg-gray-800/90 text-gray-800 dark:text-gray-200 shadow-md hover:bg-white dark:hover:bg-gray-700 transition-all opacity-100 md:opacity-0 md:group-hover/carousel:opacity-100"
+                                            >
+                                                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
+                                                </svg>
+                                            </button>
+                                            <button
+                                                onClick={handleNextImage}
+                                                className="absolute right-0 p-2 rounded-full bg-white/90 dark:bg-gray-800/90 text-gray-800 dark:text-gray-200 shadow-md hover:bg-white dark:hover:bg-gray-700 transition-all opacity-100 md:opacity-0 md:group-hover/carousel:opacity-100"
+                                            >
+                                                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
+                                                </svg>
+                                            </button>
+
+                                            {/* Dots (Puncte de indexare plasate discret la baza imaginii) */}
+                                            <div className="absolute bottom-[-12px] flex gap-1.5 justify-center mt-2">
+                                                {productImages.map((_, idx) => (
+                                                    <button
+                                                        key={idx}
+                                                        onClick={(e) => { e.stopPropagation(); setActiveImageIndex(idx); }}
+                                                        className={`h-2 rounded-full transition-all duration-300 ${idx === activeImageIndex ? 'w-5 bg-blue-600' : 'w-2 bg-gray-300 dark:bg-gray-600'}`}
+                                                    />
+                                                ))}
+                                            </div>
+                                        </>
+                                    )}
+                                </div>
+                            ) : (
+                                <div className="text-gray-400 text-xs">Nicio imagine disponibilă</div>
+                            )}
+                        </div>
+
+                        {/* Dreapta: Detalii */}
+                        <div className="w-full md:w-1/2 p-5 sm:p-8 flex flex-col justify-between">
+                            <div>
+                                <span className="text-xs font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider block mb-1">
+                                    {offer.category || "PetShop Premium"}
+                                </span>
+                                <h2 className="text-base sm:text-xl md:text-2xl font-black text-gray-900 dark:text-gray-50 mb-3 leading-snug">
+                                    {offer.name}
+                                </h2>
+
+                                <div className="flex items-center gap-2 mb-4">
+                                    <span className="text-yellow-500 font-bold text-xs sm:text-sm">⭐ {offer.rating}</span>
+                                    <span className="text-[15px] text-gray-400 dark:text-gray-500">(Recenzii eMAG)</span>
+                                </div>
+
+                                <h4 className="text-[11px] sm:text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-1">Descriere Completă:</h4>
+                                <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300 leading-relaxed mb-6 whitespace-pre-line break-words">
+                                    {offer.description && offer.description.trim() !== "" ? offer.description : "Nicio descriere completă disponibilă."}
+                                </p>
+                            </div>
+
+                            {/* Footer Popup (Fără nofollow) */}
+                            <div className="pt-4 border-t border-gray-100 dark:border-gray-700 flex items-center justify-between gap-2">
+                                <div>
+                                    <span className="block text-[15px] text-gray-400">Preț pe eMAG:</span>
+                                    <span className="text-base sm:text-2xl font-black text-green-600 dark:text-green-400 whitespace-nowrap">
+                                        {offer.price} {offer.currency}
+                                    </span>
+                                </div>
+
+                                <a
+                                    href={offer.affiliateLink}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="w-full sm:w-auto justify-center bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-xl text-sm font-bold transition-colors flex items-center gap-1.5 shadow-md shadow-blue-500/10 whitespace-nowrap"
+                                >
+                                    Cumpără acum <ExternalLink size={14} />
+                                </a>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            )}
+        </>
     );
 }
 

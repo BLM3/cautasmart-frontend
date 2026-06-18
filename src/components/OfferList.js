@@ -119,10 +119,17 @@ function OfferList({favorites, setFavorites, compareItems, setCompareItems}) {
                     setHasMore(false);
                 } else {
                     // Alipim produsele noi la cele deja existente în mod sigur
+                    // setOffers(prevOffers => {
+                    //     const existingIds = new Set(prevOffers.map(o => o.id));
+                    //     const uniqueNewOffers = offersArray.filter(o => !existingIds.has(o.id));
+                    //     return [...prevOffers, ...uniqueNewOffers];
+                    // });
                     setOffers(prevOffers => {
-                        const existingIds = new Set(prevOffers.map(o => o.id));
-                        const uniqueNewOffers = offersArray.filter(o => !existingIds.has(o.id));
-                        return [...prevOffers, ...uniqueNewOffers];
+                        const offersMap = new Map(prevOffers.map(o => [o.id, o]));
+                        offersArray.forEach(newOffer => {
+                            offersMap.set(newOffer.id, newOffer);
+                        });
+                        return Array.from(offersMap.values());
                     });
 
                     // Opțional: dacă backend-ul folosește paginare Page, verificăm dacă suntem la ultima pagină
@@ -258,8 +265,7 @@ function OfferList({favorites, setFavorites, compareItems, setCompareItems}) {
                 animate="show"
                 // Schimbarea cheii forțează re-executarea animației elegante doar când filtrele principale se modifică
                 key={`${debouncedSearchTerm}-${category}-${sortBy}`}
-                className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6"
-            >
+                className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 items-stretch">
                 {offers.map((offer, index) => {
                     // Dacă este ULTIMUL produs din listă, îi atașăm referința (ref) pentru scroll detector
                     if (offers.length === index + 1) {
