@@ -1,6 +1,6 @@
 import React, {useState,useEffect} from 'react';
 import { Heart,Home } from 'lucide-react';
-function Navbar({favorites = [],setShowFavorites,setView} ) {
+function Navbar({favorites = [],setShowFavorites,setView, isSidebarOpen, setIsSidebarOpen} ) {
     // Starea pentru Dark Mode (verifică și preferința salvată în localStorage)
     const [darkMode, setDarkMode] = useState(() => {
         return localStorage.getItem("theme") === "dark";
@@ -18,11 +18,21 @@ function Navbar({favorites = [],setShowFavorites,setView} ) {
     return (
         <nav className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 sticky top-0 z-50 transition-colors duration-300">
            <div className="max-w-7xl mx-auto px-4 h-16 flex justify-between items-center">
+               <div className="flex items-center gap-2 sm:gap-3">
+                   {/* 🔥 BUTONUL HAMBURGER - Vizibil doar pe mobile/tablete (md:hidden) */}
+                   <button onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+                       className="p-1.5 sm:p-2 text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl md:hidden border border-transparent active:scale-95 transition-all cursor-pointer"
+                       title="Deschide categoriile" >
+                       <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M4 6h16M4 12h16M4 18h16" />
+                       </svg>
+                   </button>
 
-                <h1 className="text-xl sm:text-2xl font-black text-blue-600 dark:text-blue-400 tracking-tight cursor-pointer" onClick={() => setShowFavorites(false)}>
-                 Universul Lăbuțe Fericite
-            </h1>
-
+                   <h1 className="text-lg sm:text-2xl font-black text-blue-600 dark:text-blue-400 tracking-tight cursor-pointer select-none"
+                       onClick={() => { setShowFavorites(false); setView("home"); }}
+                   > Alegeri Smart
+                   </h1>
+               </div>
             <div className="flex items-center gap-3 sm:gap-6">
                 <div className="flex items-center space-x-2 sm:space-x-4 font-semibold text-xs sm:text-sm text-gray-600 dark:text-gray-300">
                     <button className="relative flex h-9 px-2 sm:h-11 sm:px-3 items-center justify-center gap-1.5 rounded-xl border border-gray-200 bg-white text-gray-500 transition-all duration-200 hover:scale-105 hover:text-blue-500 hover:border-blue-200 active:scale-95 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:text-blue-400 dark:hover:border-blue-950/40"

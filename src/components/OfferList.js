@@ -27,7 +27,7 @@ const itemVariants = {
         transition: { type: "spring", stiffness: 110, damping: 16 }
     }
 };
-function OfferList({favorites, setFavorites, compareItems, setCompareItems}) {
+function OfferList({favorites, setFavorites, compareItems, setCompareItems,selectedCategory,setSelectedCategory}) {
     const [offers, setOffers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -39,7 +39,7 @@ function OfferList({favorites, setFavorites, compareItems, setCompareItems}) {
         return params.get('search') || '';
     });
     const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
-    const [category, setCategory]= useState('All');
+    //const [category, setCategory]= useState('All');
     const [sortBy, setSortBy] = useState('');
     const [recentlyViewed, setRecentlyViewed] = useState(() => {
         const saved = localStorage.getItem("recentlyViewed");
@@ -69,7 +69,7 @@ function OfferList({favorites, setFavorites, compareItems, setCompareItems}) {
         else params.delete('search');
 
         // Punem sau eliminăm categoria (dacă e 'All', curățăm URL-ul ca să fie mai elegant)
-        if (category && category !== 'All') params.set('category', category);
+        if (selectedCategory && selectedCategory !== 'All') params.set('category', selectedCategory);
         else params.delete('category');
 
         // Punem sau eliminăm sortarea
@@ -79,13 +79,13 @@ function OfferList({favorites, setFavorites, compareItems, setCompareItems}) {
         // Reconstruim string-ul URL fără a reîncărca pagina
         const newUrl = `${window.location.pathname}${params.toString() ? '?' + params.toString() : ''}`;
         window.history.pushState({ path: newUrl }, '', newUrl);
-    }, [searchTerm, category, sortBy]); // Se declanșează instant când se schimbă oricare din cele 3 stări
+    }, [searchTerm, selectedCategory, sortBy]); // Se declanșează instant când se schimbă oricare din cele 3 stări
     // Resetăm lista și pagina la 0 când se schimbă filtrele sau căutarea
     useEffect(() => {
         setOffers([]);
         setPage(0);
         setHasMore(true);
-    }, [debouncedSearchTerm, category, sortBy]);
+    }, [debouncedSearchTerm, selectedCategory, sortBy]);
 
     // Efect pentru DEBOUNCE: Așteaptă 500ms înainte de a schimba debouncedSearchTerm
     useEffect(() => {
@@ -108,7 +108,7 @@ function OfferList({favorites, setFavorites, compareItems, setCompareItems}) {
                 setError(null);
                 // Apelul către endpoint-ul backend-ului nostru Java
                 //const response = await axios.get(`/api/offers?page=${page}&size=12&keyword=${debouncedSearchTerm}&category=${category}&sortBy=${sortBy}`);
-                const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/offers?page=${page}&size=12&keyword=${debouncedSearchTerm}&category=${category}&sortBy=${sortBy}`);
+                const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/offers?page=${page}&size=12&keyword=${debouncedSearchTerm}&category=${selectedCategory}&sortBy=${sortBy}`);
                 // Dacă backend-ul trimite o listă goală, înseamnă că nu mai sunt produse
                 const offersArray = Array.isArray(response.data)
                     ? response.data
@@ -147,7 +147,7 @@ function OfferList({favorites, setFavorites, compareItems, setCompareItems}) {
             }
         };
         fetchOffers();
-    }, [page,debouncedSearchTerm, category, sortBy]); // Re-rulează când searchTerm se schimbă
+    }, [page,debouncedSearchTerm, selectedCategory, sortBy]); // Re-rulează când searchTerm se schimbă
     // Funcție pentru adăugarea în Istoric (maximum 6 produse unice)
     const addToRecentlyViewed = (product) => {
         const filtered = recentlyViewed.filter(item => item.id !== product.id);
@@ -174,8 +174,8 @@ function OfferList({favorites, setFavorites, compareItems, setCompareItems}) {
             />
             {/* Bara de Filtre și Sortare */}
             <FilterBar
-                category={category}
-                setCategory={setCategory}
+                category={selectedCategory}
+                setCategory={setSelectedCategory}
                 sortBy={sortBy}
                 setSortBy={setSortBy}
                 setPage={setPage}
@@ -183,7 +183,7 @@ function OfferList({favorites, setFavorites, compareItems, setCompareItems}) {
             />
 
             {/* --- ÎMBUNĂTĂȚIREA 3: PASTILE FILTRE ACTIVE --- */}
-            {(searchTerm || (category && category !== 'All') || sortBy) && (
+            {(searchTerm ||  sortBy) && (
                 <div className="flex flex-wrap gap-2 my-4 items-center max-w-3xl mx-auto">
                     <span className="text-xs font-semibold text-gray-400 dark:text-gray-500 mr-1">
                         Filtre active:
@@ -196,19 +196,6 @@ function OfferList({favorites, setFavorites, compareItems, setCompareItems}) {
                             <button
                                 onClick={() => { setSearchTerm(''); setPage(0); }}
                                 className="hover:bg-blue-100 dark:hover:bg-blue-900 p-0.5 rounded-full transition-colors"
-                            >
-                                <X size={12} />
-                            </button>
-                        </div>
-                    )}
-
-                    {/* Pastilă Categorie */}
-                    {category && category !== 'All' && (
-                        <div className="flex items-center gap-1.5 bg-purple-50 dark:bg-purple-950/40 text-purple-600 dark:text-purple-400 px-3 py-1 rounded-full text-xs font-medium border border-purple-100 dark:border-purple-900/50 animate-fadeIn">
-                            <span>Categorie: {category}</span>
-                            <button
-                                onClick={() => { setCategory('All'); setPage(0); }}
-                                className="hover:bg-purple-100 dark:hover:bg-purple-900 p-0.5 rounded-full transition-colors"
                             >
                                 <X size={12} />
                             </button>
@@ -234,7 +221,6 @@ function OfferList({favorites, setFavorites, compareItems, setCompareItems}) {
                     <button
                         onClick={() => {
                             setSearchTerm('');
-                            setCategory('All');
                             setSortBy('');
                             setPage(0);
                         }}
@@ -264,7 +250,7 @@ function OfferList({favorites, setFavorites, compareItems, setCompareItems}) {
                 initial="hidden"
                 animate="show"
                 // Schimbarea cheii forțează re-executarea animației elegante doar când filtrele principale se modifică
-                key={`${debouncedSearchTerm}-${category}-${sortBy}`}
+                key={`${debouncedSearchTerm}-${selectedCategory}-${sortBy}`}
                 className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 items-stretch">
                 {offers.map((offer, index) => {
                     // Dacă este ULTIMUL produs din listă, îi atașăm referința (ref) pentru scroll detector
