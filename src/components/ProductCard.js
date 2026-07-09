@@ -8,6 +8,9 @@ function ProductCard({ offer,favorites=[],setFavorites,compareItems=[],setCompar
     const [imageLoaded, setImageLoaded] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [activeImageIndex, setActiveImageIndex] = useState(0);
+
+    const isAvailable = offer.inStock !== false;
+
     const toggleFavorite=()=>{
         if(isFavorite){
             setFavorites(favorites.filter(item=>item.id !==offer.id));
@@ -37,7 +40,7 @@ function ProductCard({ offer,favorites=[],setFavorites,compareItems=[],setCompar
     const productImages = offer.images && Array.isArray(offer.images) && offer.images.length > 0
         ? offer.images
         : offer.imageUrl ? [offer.imageUrl] : [];
-    console.log("Produsel",offer);
+
     const handlePrevImage = (e) => {
         e.stopPropagation();
         setActiveImageIndex((prev) => (prev === 0 ? productImages.length - 1 : prev - 1));
@@ -53,12 +56,15 @@ function ProductCard({ offer,favorites=[],setFavorites,compareItems=[],setCompar
             <div className="p-2 sm:p-4 flex justify-between items-center gap-2 bg-gray-50/50 dark:bg-gray-900/20 border-b border-gray-100 dark:border-gray-700/30">
                 {/* BADGE TOP RECOMANDAT*/}
                 <div>
-                    {offer.rating >= 4.5 ? (
+                    {!isAvailable ? (
+                        <span className="inline-block bg-gray-500 text-white text-[11px] font-bold px-2 py-0.5 rounded-md uppercase">
+                                Stoc Epuizat
+                            </span>
+                    ) : offer.rating >= 4.5 ? (
                         <span className="inline-block bg-amber-500 text-white text-[13px] font-extrabold px-2 py-0.5 rounded-md shadow-sm uppercase tracking-wider">
                                 ⭐ Top
                             </span>
-                    ) : (<div className="w-10 h-4"></div> )
-                    }
+                    ) : (<div className="w-10 h-4"></div>)}
                 </div>
 
                 {/*favorites & compare*/}
@@ -173,16 +179,26 @@ function ProductCard({ offer,favorites=[],setFavorites,compareItems=[],setCompar
                         ⭐ {offer.rating}
                     </span>
                 </div>
-                {/* BUTTON */}
-                <a
-                    href={offer.affiliateLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={() => { if(addToRecentlyViewed) addToRecentlyViewed(offer); }} // Înregistrăm vizualizarea
-                    className="mt-3 text-center bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg sm:rounded-xl text-xs sm:text-sm font-semibold transition shadow-sm block"
-                >
-                    Vezi oferta ➔
-                </a>
+                {/* AFFILIATE BUTTON */}
+                {isAvailable ? (
+                    <a
+                        href={offer.affiliateLink}
+                        target="_blank"
+                        rel="noopener noreferrer sponsored"
+                        title="Redirecționare către magazinul partener"
+                        onClick={() => { if (addToRecentlyViewed) addToRecentlyViewed(offer); }}
+                        className="mt-3 text-center bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg sm:rounded-xl text-xs sm:text-sm font-semibold transition shadow-sm block"
+                    >
+                        Vezi oferta ➔
+                    </a>
+                ) : (
+                    <button
+                        disabled
+                        className="mt-3 text-center bg-gray-300 dark:bg-gray-700 text-gray-500 dark:text-gray-400 py-2 rounded-lg sm:rounded-xl text-xs sm:text-sm font-semibold cursor-not-allowed block w-full"
+                    >
+                        Indisponibil
+                    </button>
+                )}
             </div>
         </div>
             {/* --- POPUP / MODAL --- */}
@@ -255,7 +271,7 @@ function ProductCard({ offer,favorites=[],setFavorites,compareItems=[],setCompar
                         <div className="w-full md:w-1/2 p-5 sm:p-8 flex flex-col justify-between">
                             <div>
                                 <span className="text-xs font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider block mb-1">
-                                    {offer.category || "PetShop Premium"}
+                                    {offer.category || "General"}
                                 </span>
                                 <h2 className="text-base sm:text-xl md:text-2xl font-black text-gray-900 dark:text-gray-50 mb-3 leading-snug">
                                     {offer.name}
@@ -281,14 +297,20 @@ function ProductCard({ offer,favorites=[],setFavorites,compareItems=[],setCompar
                                     </span>
                                 </div>
 
-                                <a
-                                    href={offer.affiliateLink}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="w-full sm:w-auto justify-center bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-xl text-sm font-bold transition-colors flex items-center gap-1.5 shadow-md shadow-blue-500/10 whitespace-nowrap"
-                                >
-                                    Cumpără acum <ExternalLink size={14} />
-                                </a>
+                                {isAvailable ? (
+                                    <a
+                                        href={offer.affiliateLink}
+                                        target="_blank"
+                                        rel="noopener noreferrer sponsored"
+                                        className="w-full sm:w-auto justify-center bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-xl text-sm font-bold transition-colors flex items-center gap-1.5 shadow-md shadow-blue-500/10 whitespace-nowrap"
+                                    >
+                                        Cumpără acum <ExternalLink size={14} />
+                                    </a>
+                                ) : (
+                                    <button disabled className="bg-gray-300 dark:bg-gray-700 text-gray-500 dark:text-gray-400 px-5 py-3 rounded-xl text-sm font-bold cursor-not-allowed">
+                                        Stoc epuizat
+                                    </button>
+                                )}
                             </div>
                         </div>
 

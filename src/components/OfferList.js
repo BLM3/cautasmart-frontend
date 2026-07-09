@@ -108,7 +108,7 @@ function OfferList({favorites, setFavorites, compareItems, setCompareItems,selec
                 setError(null);
                 // Apelul către endpoint-ul backend-ului nostru Java
                 //const response = await axios.get(`/api/offers?page=${page}&size=12&keyword=${debouncedSearchTerm}&category=${category}&sortBy=${sortBy}`);
-                const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/offers?page=${page}&size=12&keyword=${debouncedSearchTerm}&category=${selectedCategory}&sortBy=${sortBy}`);
+                const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/offers?page=${page}&size=12&keyword=${debouncedSearchTerm}&category=${encodeURIComponent(selectedCategory)}&sortBy=${sortBy}`);
                 // Dacă backend-ul trimite o listă goală, înseamnă că nu mai sunt produse
                 const offersArray = Array.isArray(response.data)
                     ? response.data
