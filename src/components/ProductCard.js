@@ -184,7 +184,7 @@ function ProductCard({ offer,favorites=[],setFavorites,compareItems=[],setCompar
                     <a
                         href={offer.affiliateLink}
                         target="_blank"
-                        rel="noopener noreferrer sponsored"
+                        rel="sponsored noopener noreferrer"
                         title="Redirecționare către magazinul partener"
                         onClick={() => { if (addToRecentlyViewed) addToRecentlyViewed(offer); }}
                         className="mt-3 text-center bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg sm:rounded-xl text-xs sm:text-sm font-semibold transition shadow-sm block"
@@ -279,7 +279,7 @@ function ProductCard({ offer,favorites=[],setFavorites,compareItems=[],setCompar
 
                                 <div className="flex items-center gap-2 mb-4">
                                     <span className="text-yellow-500 font-bold text-xs sm:text-sm">⭐ {offer.rating}</span>
-                                    <span className="text-[15px] text-gray-400 dark:text-gray-500">(Recenzii eMAG)</span>
+                                    <span className="text-[15px] text-gray-400 dark:text-gray-500">(Recenzii)</span>
                                 </div>
 
                                 <h4 className="text-[11px] sm:text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-1">Descriere Completă:</h4>
@@ -291,7 +291,7 @@ function ProductCard({ offer,favorites=[],setFavorites,compareItems=[],setCompar
                             {/* Footer Popup (Fără nofollow) */}
                             <div className="pt-4 border-t border-gray-100 dark:border-gray-700 flex items-center justify-between gap-2">
                                 <div>
-                                    <span className="block text-[15px] text-gray-400">Preț pe eMAG:</span>
+                                    <span className="block text-[15px] text-gray-400">Preț:</span>
                                     <span className="text-base sm:text-2xl font-black text-green-600 dark:text-green-400 whitespace-nowrap">
                                         {offer.price} {offer.currency}
                                     </span>
@@ -301,10 +301,10 @@ function ProductCard({ offer,favorites=[],setFavorites,compareItems=[],setCompar
                                     <a
                                         href={offer.affiliateLink}
                                         target="_blank"
-                                        rel="noopener noreferrer sponsored"
+                                        rel="sponsored noopener noreferrer"
                                         className="w-full sm:w-auto justify-center bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-xl text-sm font-bold transition-colors flex items-center gap-1.5 shadow-md shadow-blue-500/10 whitespace-nowrap"
                                     >
-                                        Cumpără acum <ExternalLink size={14} />
+                                        Vezi pe <ExternalLink size={14} />
                                     </a>
                                 ) : (
                                     <button disabled className="bg-gray-300 dark:bg-gray-700 text-gray-500 dark:text-gray-400 px-5 py-3 rounded-xl text-sm font-bold cursor-not-allowed">
@@ -312,6 +312,9 @@ function ProductCard({ offer,favorites=[],setFavorites,compareItems=[],setCompar
                                     </button>
                                 )}
                             </div>
+                            <p className="text-[11px] text-gray-400 dark:text-gray-500 italic mt-1">
+                                * Vei fi redirecționat în siguranță către magazinul partener.
+                            </p>
                         </div>
 
                     </div>

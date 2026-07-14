@@ -7,8 +7,10 @@ import Favorites from './components/Favorites';
 import CompareBar from './components/CompareBar';
 import Terms from "./components/Terms";
 import Privacy from "./components/Privacy";
+import About from "./components/About"; //
 import Footer from "./components/Footer";
 import Sidebar from "./components/Sidebar";
+import CookieBanner from './components/CookieBanner';
 
 function App() {
     const [view, setView] = useState("home");
@@ -61,6 +63,7 @@ function App() {
                             {/* Paginile tale noi se vor deschide curat acum */}
                             {view === "terms" && <Terms />}
                             {view === "privacy" && <Privacy />}
+                            {view === "about" && <About />}
                         </main>
                     )}
                 </div>
@@ -72,6 +75,7 @@ function App() {
                 />
                 <Footer setView={setView} setShowFavorites={setShowFavorites}/>
             </div>
+            <CookieBanner />
         </div>
       );
 }
