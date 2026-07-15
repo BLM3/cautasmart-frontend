@@ -37,7 +37,11 @@ function App() {
             </header>
             <div className="w-full flex flex-col md:flex-row gap-6 flex-grow">
 
-                <Sidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory}/>
+                <Sidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen}
+                         selectedCategory={selectedCategory}
+                         setSelectedCategory={setSelectedCategory}
+                         view={view}
+                />
                 <div className="flex-grow pt-6 pb-12 px-4 max-w-[1400px] mx-auto w-full">
                     {showFavorites ? (
                             <Favorites

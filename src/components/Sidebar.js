@@ -1,6 +1,12 @@
 import React from 'react';
 
-function Sidebar({ isOpen, setIsOpen, selectedCategory, setSelectedCategory }) {
+function Sidebar({ isOpen, setIsOpen, selectedCategory, setSelectedCategory,view }) {
+
+    const paginiFaraMeniu = ["terms", "privacy", "about"];
+    if (paginiFaraMeniu.includes(view)) {
+        return null;
+    }
+
     // 1. Categoriile rămân un Array simplu de texte
     const categorii = [
         "Electrocasnice Mari & Mici",

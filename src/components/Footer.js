@@ -32,6 +32,26 @@ function Footer({ setView,setShowFavorites }) {
                             Despre Noi / Contact
                         </button>
                     </div>
+                    <div className="flex items-center gap-3">
+                        <span className="text-xs text-gray-500">Link-uri utile:</span>
+                        <a
+                            href="https://reclamatiisal.anpc.ro/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="hover:opacity-80 transition-opacity"
+                        >
+                            <img
+                                src="https://s13emagst.akamaized.net/layout/ro/static-upload/anpc-sal.svg"
+                                alt="Soluționarea Alternativă a Litigiilor"
+                                className="h-8 w-auto rounded"
+                                onError={(e) => {
+                                    // Soluție de siguranță: dacă imaginea de pe CDN dă vreodată fail, se afișează un text stilizat în loc să se strice designul
+                                    e.target.style.display = 'none';
+                                    e.target.parentNode.innerHTML = '<span className="px-2 py-1 bg-gray-800 text-xs text-white rounded border border-gray-700">A.N.P.C. (S.A.L.)</span>';
+                                }}
+                            />
+                        </a>
+                    </div>
                 </div>
 
                 {/* 💡 NOU: Mesajul de Transparență și Afiliere (Cap 4.3.l & Cap 10.4) */}
