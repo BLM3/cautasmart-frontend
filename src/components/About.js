@@ -57,7 +57,7 @@ function About() {
                         <strong>Cautasmart.ro</strong> este un ghid inteligent și independent de cumpărături, creat cu scopul de a simplifica găsirea celor mai bune oferte pentru hrana și accesoriile animalelor tale de companie.
                     </p>
                     <p className="mt-2">
-                        Ne propunem să centralizăm produse de calitate, verificate și actualizate, oferindu-ți acces rapid la prețuri competitive de la magazinele de încredere din România (cum ar fi eMAG).
+                        Ne propunem să centralizăm produse de calitate, verificate și actualizate, oferindu-ți acces rapid la prețuri competitive de la magazinele de încredere din România.
                     </p>
                 </div>
 

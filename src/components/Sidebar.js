@@ -1,26 +1,93 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-function Sidebar({ isOpen, setIsOpen, selectedCategory, setSelectedCategory,view }) {
+function Sidebar({ isOpen, setIsOpen, selectedCategory, setSelectedCategory, view }) {
+
+    // Stare pentru a urmări ce categorie principală este extinsă (deschisă)
+    const [openCategory, setOpenCategory] = useState(null);
 
     const paginiFaraMeniu = ["terms", "privacy", "about"];
     if (paginiFaraMeniu.includes(view)) {
         return null;
     }
 
-    // 1. Categoriile rămân un Array simplu de texte
-    const categorii = [
-        "Electrocasnice Mari & Mici",
-        "Telefoane & Tablete",
-        "Desktop, Laptopuri & IT",
-        "Televizoare & Gadgeturi",
-        "Frumusete & Ingrijire",
-        "Articole Copii & Bebe",
-        "Petshop"
+    // Structura de date ierarhică bazată pe feed-ul tău
+    const categoriiIerarhice = [
+        {
+            nume: "Supraveghere & Securitate",
+            subcategorii: [
+                "Camere Supraveghere",
+                "Sisteme Înregistrare & Kituri",
+                "Sisteme de Alarmă",
+                "Detecție Incendiu",
+                "Accesorii Supraveghere"
+            ]
+        },
+        {
+            nume: "Instalații Electrice & Smart Home",
+            subcategorii: [
+                "Protecție Electrice",
+                "Automatizări & Control",
+                "Cabluri & Prelungitoare"
+            ]
+        },
+        {
+            nume: "Iluminat & Energie",
+            subcategorii: [
+                "Corpuri de Iluminat",
+                "Bande LED & Accesorii",
+                "Energie Solară & Backup"
+            ]
+        },
+        {
+            nume: "IT, Conectivitate & Audio",
+            subcategorii: [
+                "Telefoane & Tablete",
+                "Accesorii Telefoane",
+                "Audio & Gadgeturi",
+                "Răcire & Rețelistică"
+            ]
+        },
+        {
+            nume: "Calculatoare, Periferice & Gaming",
+            subcategorii: [
+                "Monitoare",
+                "Periferice PC",
+                "Gaming"
+            ]
+        },
+        {
+            nume: "Electrocasnice & Auto",
+            subcategorii: [
+                "Climatizare & Răcire",
+                "Îngrijire Casă & Personală",
+                "Auto"
+            ]
+        },
+        {
+            nume: "Unelte & Bricolaj",
+            subcategorii: [
+                "Echipamente & Scule",
+                "Alte Electronice"
+            ]
+        }
     ];
+
+    // Funcție pentru comutarea vizibilității subcategoriilor
+    const toggleSubmenu = (numeCategorie) => {
+        setOpenCategory(openCategory === numeCategorie ? null : numeCategorie);
+    };
+
+    // Selectare categorie/subcategorie și închidere meniu pe mobil
+    const handleSelectCategory = (categoryName) => {
+        setSelectedCategory(categoryName);
+        if (window.innerWidth < 768) {
+            setIsOpen(false);
+        }
+    };
 
     return (
         <>
-            {/* BACKGROUND ÎNTUNECAT (Overlay) */}
+            {/* BACKGROUND ÎNTUNECAT (Overlay Mobile) */}
             {isOpen && (
                 <div
                     className="fixed inset-0 bg-black/50 z-40 md:hidden transition-opacity"
@@ -29,7 +96,7 @@ function Sidebar({ isOpen, setIsOpen, selectedCategory, setSelectedCategory,view
             )}
 
             {/* MENIUL LATERAL */}
-            <aside className={`fixed top-0 left-0 h-full w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 pt-20 px-4 z-40 transition-transform duration-300 ease-in-out
+            <aside className={`fixed top-0 left-0 h-full w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 pt-20 px-4 z-40 transition-transform duration-300 ease-in-out overflow-y-auto
                     ${isOpen ? 'translate-x-0' : '-translate-x-full'}
                 md:translate-x-0 md:sticky md:top-[72px] md:h-[calc(100vh-72px)] md:pt-4`}>
 
@@ -39,7 +106,7 @@ function Sidebar({ isOpen, setIsOpen, selectedCategory, setSelectedCategory,view
                         onClick={() => setIsOpen(false)}
                         className="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-white rounded-md hover:bg-gray-100 dark:hover:bg-gray-700"
                     >
-                        X
+                        ✕
                     </button>
                 </div>
 
@@ -47,36 +114,77 @@ function Sidebar({ isOpen, setIsOpen, selectedCategory, setSelectedCategory,view
                     Categorii Produse
                 </h2>
 
-                <nav className="space-y-1">
+                <nav className="space-y-1 pb-6">
+                    {/* Opțiunea "Toate produsele" */}
                     <button
-                        onClick={() => {
-                            setSelectedCategory("All");
-                            if (window.innerWidth < 768) setIsOpen(false);
-                        }}
+                        onClick={() => handleSelectCategory("All")}
                         className={`w-full text-left px-3 py-2.5 text-sm font-medium rounded-lg transition-colors cursor-pointer block
                             ${selectedCategory === "All"
-                            ? "bg-blue-50 text-blue-600 dark:bg-blue-950/40 dark:text-blue-400"
+                            ? "bg-blue-50 text-blue-600 dark:bg-blue-950/40 dark:text-blue-400 font-semibold"
                             : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"}`}
                     >
                         Toate produsele
                     </button>
 
-                    {categorii.map((cat, index) => {
-                        const isSelected = selectedCategory === cat;
+                    {/* Meniul Categoriilor Ierarhice */}
+                    {categoriiIerarhice.map((cat, index) => {
+                        const isMainSelected = selectedCategory === cat.nume;
+                        const isExpanded = openCategory === cat.nume;
+
                         return (
-                            <button
-                                key={index}
-                                onClick={() => {
-                                    setSelectedCategory(cat);
-                                    if (window.innerWidth < 768) setIsOpen(false);
-                                }}
-                                className={`w-full text-left px-3 py-2.5 text-sm font-medium rounded-lg transition-colors cursor-pointer block
-                                    ${isSelected
-                                    ? "bg-blue-50 text-blue-600 dark:bg-blue-950/40 dark:text-blue-400 font-semibold"
-                                    : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"}`}
-                            >
-                                {cat}
-                            </button>
+                            <div key={index} className="space-y-1">
+                                {/* Categoria Principală */}
+                                <div className="flex items-center justify-between">
+                                    <button
+                                        onClick={() => handleSelectCategory(cat.nume)}
+                                        className={`w-full text-left px-3 py-2 text-sm font-medium rounded-lg transition-colors cursor-pointer flex-1
+                                            ${isMainSelected
+                                            ? "bg-blue-50 text-blue-600 dark:bg-blue-950/40 dark:text-blue-400 font-semibold"
+                                            : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"}`}
+                                    >
+                                        {cat.nume}
+                                    </button>
+
+                                    {/* Săgeată pentru expandare subcategorii */}
+                                    {cat.subcategorii.length > 0 && (
+                                        <button
+                                            onClick={() => toggleSubmenu(cat.nume)}
+                                            className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 rounded-lg"
+                                            aria-label="Toggle submenu"
+                                        >
+                                            <svg
+                                                className={`w-4 h-4 transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`}
+                                                fill="none"
+                                                stroke="currentColor"
+                                                viewBox="0 0 24 24"
+                                            >
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                                            </svg>
+                                        </button>
+                                    )}
+                                </div>
+
+                                {/* Lista Subcategoriilor (Apare doar dacă este deschisă) */}
+                                {isExpanded && (
+                                    <div className="pl-4 space-y-1 border-l-2 border-gray-100 dark:border-gray-700 ml-3">
+                                        {cat.subcategorii.map((sub, subIndex) => {
+                                            const isSubSelected = selectedCategory === sub;
+                                            return (
+                                                <button
+                                                    key={subIndex}
+                                                    onClick={() => handleSelectCategory(sub)}
+                                                    className={`w-full text-left px-3 py-1.5 text-xs font-medium rounded-md transition-colors cursor-pointer block
+                                                        ${isSubSelected
+                                                        ? "text-blue-600 dark:text-blue-400 font-bold bg-blue-50/50 dark:bg-blue-950/20"
+                                                        : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-700/50"}`}
+                                                >
+                                                    {sub}
+                                                </button>
+                                            );
+                                        })}
+                                    </div>
+                                )}
+                            </div>
                         );
                     })}
                 </nav>

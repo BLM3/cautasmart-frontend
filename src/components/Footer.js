@@ -33,15 +33,15 @@ function Footer({ setView,setShowFavorites }) {
                         </button>
                     </div>
                     <div className="flex items-center gap-3">
-                        <span className="text-xs text-gray-500">Link-uri utile:</span>
+                        <span className="text-xs text-gray-500">Link util:</span>
                         <a
                             href="https://reclamatiisal.anpc.ro/"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="hover:opacity-80 transition-opacity"
-                        >
+                        >https://reclamatiisal.anpc.ro/Portals/0/Images/anpc2.png?ver=mZNMrFLBGWE9G0-ZWbHY6g%3d%3d
                             <img
-                                src="https://s13emagst.akamaized.net/layout/ro/static-upload/anpc-sal.svg"
+                                src=""
                                 alt="Soluționarea Alternativă a Litigiilor"
                                 className="h-8 w-auto rounded"
                                 onError={(e) => {

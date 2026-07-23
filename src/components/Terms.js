@@ -25,7 +25,7 @@ function Terms() {
                     <h2 className="text-xl font-bold text-gray-900 border-l-4 border-blue-600 pl-3 mb-3 dark:text-white dark:border-blue-500">2. Funcționarea Afilierii și Link-urile Terțe</h2>
                     <p>
                         Platforma noastră conține link-uri de afiliere. Acest lucru înseamnă că în momentul în care utilizați butoanele de redirecționare
-                        (precum „Vezi oferta”, „Cumpără acum”) și finalizați o achiziție pe site-ul magazinului partener (de exemplu, eMAG sau alte magazine din rețeaua Profitshare),
+                        (precum „Vezi oferta”, „Cumpără acum”) și finalizați o achiziție pe site-ul magazinului partener (de exemplu, magazine din rețeaua Profitshare),
                         Cautasmart.ro poate încasa un comision procentual din valoarea vânzării. Această operațiune <strong>nu implică niciun cost suplimentar </strong>
                          sau nicio taxă ascunsă pentru dumneavoastră, prețul produsului rămânând neschimbat.
                     </p>
