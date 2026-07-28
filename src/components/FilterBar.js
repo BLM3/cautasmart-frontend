@@ -27,10 +27,10 @@ function FilterBar({ category, setCategory, sortBy, setSortBy, setPage, availabl
                     onChange={(e) => { setSortBy(e.target.value); setPage(0); }}
                     className="w-full sm:w-auto p-2 border rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-gray-200 border-gray-200 dark:border-gray-600 font-medium focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
-                    <option value="">Implicit</option>
+                    <option value="">Cele mai recente(Implicit)</option>
                     <option value="price_asc">Preț: Mic ➔ Mare</option>
                     <option value="price_desc">Preț: Mare ➔ Mic</option>
-                    <option value="rating_desc">Cele mai apreciate (⭐)</option>
+                    <option value="views_desc">Cele mai vizualizate</option>
                 </select>
             </div>
         </div>

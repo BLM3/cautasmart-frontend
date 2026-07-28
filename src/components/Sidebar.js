@@ -10,64 +10,57 @@ function Sidebar({ isOpen, setIsOpen, selectedCategory, setSelectedCategory, vie
         return null;
     }
 
-    // Structura de date ierarhică bazată pe feed-ul tău
+    // Structura de date ierarhică adaptată pentru Ghiduri și Topuri
     const categoriiIerarhice = [
+        {
+            nume: "Tech",
+            subcategorii: [
+                "Televizoare OLED & LED",
+                "Telefoane Smart",
+                "Tablete & E-readers",
+                "Audio & Căști Bluetooth"
+            ]
+        },
+        {
+            nume: "Home",
+            subcategorii: [
+                "Aspiratoare Robot",
+                "Climatizare & Purificatoare",
+                "Espressoare & Cafetiere",
+                "Electrocasnice Mari"
+            ]
+        },
+        {
+            nume: "Gaming",
+            subcategorii: [
+                "Monitoare Gaming",
+                "Laptopuri & PC-uri",
+                "Periferice & Scaune Gaming",
+                "Console & Accesorii"
+            ]
+        },
+        {
+            nume: "Fitness",
+            subcategorii: [
+                "Ceasuri Smart & Brățări",
+                "Benzi de Alergat & Biciclete",
+                "Accesorii Recuperare"
+            ]
+        },
         {
             nume: "Supraveghere & Securitate",
             subcategorii: [
                 "Camere Supraveghere",
-                "Sisteme Înregistrare & Kituri",
                 "Sisteme de Alarmă",
-                "Detecție Incendiu",
-                "Accesorii Supraveghere"
-            ]
-        },
-        {
-            nume: "Instalații Electrice & Smart Home",
-            subcategorii: [
-                "Protecție Electrice",
-                "Automatizări & Control",
-                "Cabluri & Prelungitoare"
-            ]
-        },
-        {
-            nume: "Iluminat & Energie",
-            subcategorii: [
-                "Corpuri de Iluminat",
-                "Bande LED & Accesorii",
-                "Energie Solară & Backup"
-            ]
-        },
-        {
-            nume: "IT, Conectivitate & Audio",
-            subcategorii: [
-                "Telefoane & Tablete",
-                "Accesorii Telefoane",
-                "Audio & Gadgeturi",
-                "Răcire & Rețelistică"
-            ]
-        },
-        {
-            nume: "Calculatoare, Periferice & Gaming",
-            subcategorii: [
-                "Monitoare",
-                "Periferice PC",
-                "Gaming"
-            ]
-        },
-        {
-            nume: "Electrocasnice & Auto",
-            subcategorii: [
-                "Climatizare & Răcire",
-                "Îngrijire Casă & Personală",
-                "Auto"
+                "Smart Lock & Interfoane"
             ]
         },
         {
             nume: "Unelte & Bricolaj",
             subcategorii: [
-                "Echipamente & Scule",
-                "Alte Electronice"
+                "Scule Cu Acumulator",
+                "Generatoare & Energie Solară",
+                "Echipamente Atelier"
             ]
         }
     ];
@@ -101,7 +94,7 @@ function Sidebar({ isOpen, setIsOpen, selectedCategory, setSelectedCategory, vie
                 md:translate-x-0 md:sticky md:top-[72px] md:h-[calc(100vh-72px)] md:pt-4`}>
 
                 <div className="flex justify-between items-center mb-6 md:hidden">
-                    <h2 className="text-lg font-bold text-gray-900 dark:text-white">Categorii</h2>
+                    <h2 className="text-lg font-bold text-gray-900 dark:text-white">Categorii Ghiduri</h2>
                     <button
                         onClick={() => setIsOpen(false)}
                         className="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-white rounded-md hover:bg-gray-100 dark:hover:bg-gray-700"
@@ -111,11 +104,11 @@ function Sidebar({ isOpen, setIsOpen, selectedCategory, setSelectedCategory, vie
                 </div>
 
                 <h2 className="hidden md:block text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-4">
-                    Categorii Produse
+                    Categorii Ghiduri
                 </h2>
 
                 <nav className="space-y-1 pb-6">
-                    {/* Opțiunea "Toate produsele" */}
+                    {/* Opțiunea "Toate ghidurile" */}
                     <button
                         onClick={() => handleSelectCategory("All")}
                         className={`w-full text-left px-3 py-2.5 text-sm font-medium rounded-lg transition-colors cursor-pointer block
@@ -123,7 +116,7 @@ function Sidebar({ isOpen, setIsOpen, selectedCategory, setSelectedCategory, vie
                             ? "bg-blue-50 text-blue-600 dark:bg-blue-950/40 dark:text-blue-400 font-semibold"
                             : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"}`}
                     >
-                        Toate produsele
+                        Toate ghidurile
                     </button>
 
                     {/* Meniul Categoriilor Ierarhice */}
@@ -146,7 +139,7 @@ function Sidebar({ isOpen, setIsOpen, selectedCategory, setSelectedCategory, vie
                                     </button>
 
                                     {/* Săgeată pentru expandare subcategorii */}
-                                    {cat.subcategorii.length > 0 && (
+                                    {cat.subcategorii && cat.subcategorii.length > 0 && (
                                         <button
                                             onClick={() => toggleSubmenu(cat.nume)}
                                             className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 rounded-lg"

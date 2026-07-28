@@ -39,9 +39,9 @@ function Footer({ setView,setShowFavorites }) {
                             target="_blank"
                             rel="noopener noreferrer"
                             className="hover:opacity-80 transition-opacity"
-                        >https://reclamatiisal.anpc.ro/Portals/0/Images/anpc2.png?ver=mZNMrFLBGWE9G0-ZWbHY6g%3d%3d
+                        >
                             <img
-                                src=""
+                                src="https://reclamatiisal.anpc.ro/Portals/0/Images/anpc2.png?ver=mZNMrFLBGWE9G0-ZWbHY6g%3d%3d"
                                 alt="Soluționarea Alternativă a Litigiilor"
                                 className="h-8 w-auto rounded"
                                 onError={(e) => {

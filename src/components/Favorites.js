@@ -1,4 +1,4 @@
-import ProductCard from "./ProductCard";
+import ProductCard from "./GuideCard";
 
 function Favorites({favorites,setFavorites, compareItems, setCompareItems}) {
     return (
