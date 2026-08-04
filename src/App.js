@@ -30,6 +30,12 @@ function App() {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }, [view, showFavorites, selectedGuideSlug]);
 
+    useEffect(() => {
+        setView("home");
+        setSelectedGuideSlug(null);
+        setShowFavorites(false);
+    }, [selectedCategory]);
+
     // Funcție ajutătoare pentru navigare la deschiderea unui ghid complet
     const openGuideDetail = (slug) => {
         setSelectedGuideSlug(slug);
@@ -60,6 +66,7 @@ function App() {
                     selectedCategory={selectedCategory}
                     setSelectedCategory={setSelectedCategory}
                     view={view}
+                    onSelectGuide={setSelectedGuideSlug}
                 />
 
                 <div className="flex-grow pt-6 pb-12 px-4 max-w-[1400px] mx-auto w-full">

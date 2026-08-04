@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-function Sidebar({ isOpen, setIsOpen, selectedCategory, setSelectedCategory, view }) {
+function Sidebar({ isOpen, setIsOpen, selectedCategory, setSelectedCategory, view,onSelectGuide }) {
 
     // Stare pentru a urmări ce categorie principală este extinsă (deschisă)
     const [openCategory, setOpenCategory] = useState(null);
@@ -73,6 +73,9 @@ function Sidebar({ isOpen, setIsOpen, selectedCategory, setSelectedCategory, vie
     // Selectare categorie/subcategorie și închidere meniu pe mobil
     const handleSelectCategory = (categoryName) => {
         setSelectedCategory(categoryName);
+        if (onSelectGuide) {
+            onSelectGuide(null);
+        }
         if (window.innerWidth < 768) {
             setIsOpen(false);
         }
