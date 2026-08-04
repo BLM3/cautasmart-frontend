@@ -54,20 +54,20 @@ function About() {
                         <HeartHandshake className="text-amber-500" size={20} /> Misiunea Noastră
                     </h2>
                     <p>
-                        <strong>Cautasmart.ro</strong> este un ghid inteligent și independent de cumpărături, creat cu scopul de a simplifica găsirea celor mai bune oferte pentru hrana și accesoriile animalelor tale de companie.
+                        <strong>Cautasmart.ro</strong> este un portal independent de ghiduri de cumpărături, analize și topuri de produse, creat cu scopul de a te ajuta să iei cele mai bune decizii când achiziționezi echipamente tech, electrocasnice sau gadgeturi.
                     </p>
                     <p className="mt-2">
-                        Ne propunem să centralizăm produse de calitate, verificate și actualizate, oferindu-ți acces rapid la prețuri competitive de la magazinele de încredere din România.
+                        Ne propunem să simplificăm procesul de alegere prin analize obiective, comparații clare și recomandări bazate pe specificații reale, oferindu-ți acces rapid la produsele potrivite de la magazinele de încredere din România.
                     </p>
                 </div>
 
-                {/* Sectiunea Agregator & Afilere */}
+                {/* Secțiunea Ghiduri Editoriale & Afiliere */}
                 <div className="p-4 bg-blue-50/50 dark:bg-blue-950/20 rounded-xl border border-blue-100 dark:border-blue-900/40">
                     <h2 className="text-base font-bold text-gray-900 dark:text-gray-100 mb-1 flex items-center gap-2">
                         <ShieldCheck className="text-blue-600 dark:text-blue-400" size={18} /> Transparență & Parteneriate
                     </h2>
                     <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
-                        Site-ul nostru funcționează ca un agregator de oferte și participă la programe de marketing afiliat (inclusiv rețeaua Profitshare). Când apeși pe o ofertă și cumperi un produs, putem primi un mic comision de la magazinul partener, fără niciun cost suplimentar pentru tine.
+                        Site-ul nostru publică conținut editorial independent și participă la programe de marketing afiliat (inclusiv rețeaua Profitshare). Când citești un ghid, apeși pe o recomandare și cumperi un produs de la un magazin partener, putem primi un mic comision, fără niciun cost suplimentar pentru tine.
                     </p>
                 </div>
 

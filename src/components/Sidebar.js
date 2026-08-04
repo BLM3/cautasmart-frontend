@@ -62,6 +62,24 @@ function Sidebar({ isOpen, setIsOpen, selectedCategory, setSelectedCategory, vie
                 "Generatoare & Energie Solară",
                 "Echipamente Atelier"
             ]
+        },
+        {
+            nume: "Bebeluși & Copii",
+            subcategorii: [
+                "Cărucioare & Scaune Auto",
+                "Monitorizare & Îngrijire",
+                "Jucării & Educație",
+                "Aparate & Hrănire Bebeluşi"
+            ]
+        },
+        {
+            nume: "Petshop & Animale",
+            subcategorii: [
+                "Aspiratoare & Păr Animale",
+                "Hrănitoare Inteligente & Dozatoare",
+                "Toalete Inteligente Pisici",
+                "Accesorii & Îngrijire Animale"
+            ]
         }
     ];
 
