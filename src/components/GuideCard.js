@@ -2,13 +2,21 @@ import React, { useState } from 'react';
 import toast from 'react-hot-toast';
 import { Heart, BarChart3, X, ExternalLink, BookOpen, Calendar, ArrowRight } from 'lucide-react';
 
-function GuideCard({ guide, favorites = [], setFavorites, compareItems = [], setCompareItems, addToRecentlyViewed,onSelectGuide }) {
-    // Identificator unic pentru Ghid (slug sau id)
+function GuideCard({ guide, favorites = [], setFavorites, compareItems = [], setCompareItems, addToRecentlyViewed, onSelectGuide }) {
+    // Identificator unic pentru Ghid
     const guideSlug = guide.slug || guide.id;
 
-    // Verificăm dacă ghidul este deja salvat la Favorite sau Comparare
+    // Extragerea produsului cel mai bun (#1) din Ghid
+    const topProduct = (guide.items && guide.items.length > 0)
+        ? (guide.items.find(item => item.rank === 1) || guide.items[0])
+        : null;
+
+    // Identificator unic pentru produsul selectat (Ghid ID + Produs ID)
+    const compareId = topProduct ? `${guide.id}-${topProduct.id || topProduct.rank}` : guideSlug;
+
+    // Verificăm dacă ghidul este salvat la Favorite sau dacă produsul #1 este în Comparare
     const isFavorite = favorites.some(item => (item.slug || item.id) === guideSlug);
-    const isCompared = compareItems.some(item => (item.slug || item.id) === guideSlug);
+    const isCompared = compareItems.some(item => item.id === compareId);
 
     const [imageLoaded, setImageLoaded] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -26,17 +34,38 @@ function GuideCard({ guide, favorites = [], setFavorites, compareItems = [], set
         }
     };
 
-    // Toggle pentru Comparare
+    // Toggle pentru Comparare - SELECTEAZĂ AUTOMAT PRODUSUL #1
     const toggleCompare = (e) => {
         e.stopPropagation();
+
+        if (!topProduct) {
+            toast.error('Acest ghid nu are produse de comparat.');
+            return;
+        }
+
         if (isCompared) {
-            setCompareItems(compareItems.filter(item => (item.slug || item.id) !== guideSlug));
-            toast('Ghid eliminat din comparație', { icon: '🔄' });
-        } else if (compareItems.length < 5) {
-            setCompareItems([...compareItems, guide]);
-            toast.success('Ghid adăugat la comparație! 📊');
+            setCompareItems(compareItems.filter(item => item.id !== compareId));
+            toast('Produs eliminat din comparație', { icon: '🔄' });
+        } else if (compareItems.length < 4) {
+            // Construim obiectul de produs optimizat pentru CompareBar
+            const payload = {
+                id: compareId,
+                productName: topProduct.productName || topProduct.name || topProduct.brand,
+                name: topProduct.productName || topProduct.name || topProduct.brand,
+                imageUrl: topProduct.imageUrl || guide.bannerImageUrl,
+                estimatedPrice: topProduct.estimatedPrice || topProduct.price,
+                badgeText: topProduct.badgeText || `Locul #1 în Top`,
+                pros: topProduct.pros || [],
+                cons: topProduct.cons || [],
+                reviewSummary: topProduct.reviewSummary || topProduct.summary || guide.summary,
+                affiliateUrl: topProduct.affiliateUrl || topProduct.affiliateLink,
+                guideTitle: guide.title // Adăugăm titlul ghidului pentru referință
+            };
+
+            setCompareItems([...compareItems, payload]);
+            toast.success(`Adăugat: ${payload.productName} (#1 din Ghid)! 📊`);
         } else {
-            toast.error('Poți compara maximum 5 ghiduri simultan!');
+            toast.error('Poți compara maximum 4 produse simultan!');
         }
     };
 
@@ -47,7 +76,7 @@ function GuideCard({ guide, favorites = [], setFavorites, compareItems = [], set
         }
     };
 
-    // Listă de imagini (Preluăm imagini din ghid sau din produsele din top)
+    // Listă de imagini pentru preview
     const guideImages = guide.images && Array.isArray(guide.images) && guide.images.length > 0
         ? guide.images
         : guide.bannerImageUrl
@@ -105,9 +134,10 @@ function GuideCard({ guide, favorites = [], setFavorites, compareItems = [], set
                                         ? 'bg-blue-600 border-blue-600 text-white shadow-sm'
                                         : 'bg-gray-200 border-transparent hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200'
                                 }`}
+                                title="Compară cel mai bun produs din acest ghid"
                             >
                                 <BarChart3 size={14} className="sm:size-4" />
-                                <span className="hidden xs:inline">{isCompared ? "Selectat" : "Compară"}</span>
+                                <span className="hidden xs:inline">{isCompared ? "Selectat" : "Compară #1"}</span>
                             </button>
                         )}
                     </div>
@@ -188,24 +218,10 @@ function GuideCard({ guide, favorites = [], setFavorites, compareItems = [], set
                         type="button"
                         onClick={(e) => {
                             e.stopPropagation();
-
-                            // 1. Căutăm cel mai bun identificator disponibil
-                            const guideIdentifier =
-                                guide.slug ||
-                                guide.id ||
-                                (guide.title ? guide.title.toLowerCase().replace(/[^a-z0-0]/g, '-') : null);
-
-                            console.log("S-a identificat ghidul:", guideIdentifier, guide);
-
-                            if (addToRecentlyViewed) {
-                                addToRecentlyViewed(guide);
-                            }
-
-                            // 2. Apelăm funcția doar dacă avem un identificator valid
+                            const guideIdentifier = guide.slug || guide.id;
+                            if (addToRecentlyViewed) addToRecentlyViewed(guide);
                             if (typeof onSelectGuide === 'function' && guideIdentifier) {
                                 onSelectGuide(guideIdentifier);
-                            } else {
-                                console.error("Ghidul nu are nici slug, nici ID valid:", guide);
                             }
                         }}
                         className="mt-3 text-center bg-blue-600 hover:bg-blue-700 text-white py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-bold transition shadow-sm flex items-center justify-center gap-1.5 w-full cursor-pointer"
@@ -216,14 +232,13 @@ function GuideCard({ guide, favorites = [], setFavorites, compareItems = [], set
                 </div>
             </div>
 
-            {/* --- POPUP / MODAL (QUICK VIEW) --- */}
+            {/* POPUP / MODAL (QUICK VIEW) */}
             {isModalOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
                     <div className="absolute inset-0" onClick={() => setIsModalOpen(false)}></div>
 
                     <div className="bg-white dark:bg-gray-800 rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto relative z-10 shadow-2xl flex flex-col md:flex-row border border-gray-100 dark:border-gray-700">
 
-                        {/* Buton Închidere */}
                         <button
                             onClick={() => setIsModalOpen(false)}
                             className="absolute top-3 right-3 sm:top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 p-1.5 rounded-full bg-gray-100 dark:bg-gray-700 z-20 transition-colors"
@@ -241,7 +256,6 @@ function GuideCard({ guide, favorites = [], setFavorites, compareItems = [], set
                                         className="max-h-60 sm:max-h-72 md:max-h-80 object-contain rounded-lg select-none transition-all duration-300"
                                     />
 
-                                    {/* Săgeți de Navigație Carusel */}
                                     {guideImages.length > 1 && (
                                         <>
                                             <button
@@ -261,7 +275,6 @@ function GuideCard({ guide, favorites = [], setFavorites, compareItems = [], set
                                                 </svg>
                                             </button>
 
-                                            {/* Puncte de Indexare */}
                                             <div className="absolute bottom-[-12px] flex gap-1.5 justify-center mt-2">
                                                 {guideImages.map((_, idx) => (
                                                     <button
@@ -279,7 +292,7 @@ function GuideCard({ guide, favorites = [], setFavorites, compareItems = [], set
                             )}
                         </div>
 
-                        {/* Dreapta: Detalii Ghid & Previzualizare Top */}
+                        {/* Dreapta: Detalii Ghid */}
                         <div className="w-full md:w-1/2 p-5 sm:p-8 flex flex-col justify-between">
                             <div>
                                 <span className="text-xs font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider block mb-1">
@@ -294,7 +307,6 @@ function GuideCard({ guide, favorites = [], setFavorites, compareItems = [], set
                                     {guide.summary || "Niciun rezumat disponibil."}
                                 </p>
 
-                                {/* Previzualizare Produse din Top (Afișează toate din listă, ex. 3 produse) */}
                                 {guide.items && guide.items.length > 0 && (
                                     <div className="mt-4">
                                         <h4 className="text-[11px] sm:text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-2">
@@ -317,7 +329,6 @@ function GuideCard({ guide, favorites = [], setFavorites, compareItems = [], set
                                 )}
                             </div>
 
-                            {/* Footer Popup */}
                             <div className="pt-4 border-t border-gray-100 dark:border-gray-700 flex items-center justify-between gap-2 mt-6">
                                 <button
                                     onClick={() => {
