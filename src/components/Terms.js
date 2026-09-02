@@ -25,7 +25,7 @@ function Terms() {
                     <h2 className="text-xl font-bold text-gray-900 border-l-4 border-blue-600 pl-3 mb-3 dark:text-white dark:border-blue-500">2. Declinarea Responsabilității privind Marketingul de Afiliere</h2>
                     <p>
                         Articolele și ghidurile noastre conțin link-uri de afiliere. În momentul în care utilizați butoanele de redirecționare (precum „Vezi oferta”, „Verifică prețul”)
-                        și efectuați o achiziție pe site-ul unui magazin partener (din rețele precum Profitshare sau rețele similare), Cautasmart.ro poate primi un mic comision din valoarea vânzării.
+                        și efectuați o achiziție pe site-ul unui magazin partener, Cautasmart.ro poate primi un mic comision din valoarea vânzării.
                         Această operațiune <strong>nu implică niciun cost suplimentar</strong> sau nicio taxă ascunsă pentru dumneavoastră, prețul produsului fiind identic cu cel direct din magazinul respectiv.
                     </p>
                 </section>

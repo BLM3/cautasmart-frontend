@@ -57,7 +57,7 @@ function Footer({ setView,setShowFavorites }) {
                 {/* 💡 NOU: Mesajul de Transparență și Afiliere (Cap 4.3.l & Cap 10.4) */}
                 <div className="pt-4 border-t border-gray-800 dark:border-gray-900 text-xs text-gray-500 leading-relaxed dark:text-gray-600">
                     <p>
-                        * <strong className="text-gray-400 dark:text-gray-500">Notă privind transparența:</strong> Cautasmart.ro participă la programe de marketing afiliat (inclusiv Profitshare).
+                        * <strong className="text-gray-400 dark:text-gray-500">Notă privind transparența:</strong> Cautasmart.ro participă la programe de marketing afiliat.
                         Dacă apeși pe un link de produs și efectuezi o cumpărătură, este posibil să primim un mic comision, fără niciun cost suplimentar pentru tine.
                         Prețurile și disponibilitatea produselor sunt actualizate periodic, dar pot exista mici diferențe față de site-ul comerciantului partener.
                     </p>

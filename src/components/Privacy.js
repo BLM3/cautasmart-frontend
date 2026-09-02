@@ -29,7 +29,7 @@ function Privacy() {
                 <section>
                     <h2 className="text-xl font-bold text-gray-900 border-l-4 border-green-600 pl-3 mb-3 dark:text-white dark:border-green-500">2. Module Cookie și Marketingul de Afiliere</h2>
                     <p>
-                        Pentru a măsura performanța recomandărilor editoriale și a atribui corect comisioanele din afiliere, platforma noastră și partenerii tehnici (cum sunt rețelele de afiliere Profitshare sau similare) utilizează module cookie de urmărire comercială.
+                        Pentru a măsura performanța recomandărilor editoriale și a atribui corect comisioanele din afiliere, platforma noastră și partenerii tehnici (cum sunt rețelele de afiliere) utilizează module cookie de urmărire comercială.
                         În momentul în care doriți să verificați oferta unui produs recomandaț și dați click pe un link extern (ex: „Vezi oferta”, „Verifică prețul”), un identificator numeric anonim este plasat temporar în browserul dumneavoastră (de regulă pentru o perioadă de 15-30 de zile).
                     </p>
                     <p className="mt-2">

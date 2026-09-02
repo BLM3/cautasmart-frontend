@@ -67,7 +67,7 @@ function About() {
                         <ShieldCheck className="text-blue-600 dark:text-blue-400" size={18} /> Transparență & Parteneriate
                     </h2>
                     <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
-                        Site-ul nostru publică conținut editorial independent și participă la programe de marketing afiliat (inclusiv rețeaua Profitshare). Când citești un ghid, apeși pe o recomandare și cumperi un produs de la un magazin partener, putem primi un mic comision, fără niciun cost suplimentar pentru tine.
+                        Site-ul nostru publică conținut editorial independent și participă la programe de marketing afiliat. Când citești un ghid, apeși pe o recomandare și cumperi un produs de la un magazin partener, putem primi un mic comision, fără niciun cost suplimentar pentru tine.
                     </p>
                 </div>
 

@@ -22,7 +22,7 @@ const CookieBanner = () => {
         <div style={styles.banner}>
             <div style={styles.content}>
                 <p style={styles.text}>
-                    🍪 Acest site folosește cookie-uri proprii și de la terți (inclusiv rețele de afiliere precum Profitshare)
+                    🍪 Acest site folosește cookie-uri proprii și de la terți (inclusiv rețele de afiliere)
                     pentru a-ți oferi o experiență optimă de navigare, a analiza traficul și a direcționa corect ofertele partenerilor.
                     Prin continuarea navigării, îți exprimi acordul cu privire la utilizarea acestora.
                 </p>
