@@ -76,7 +76,7 @@ function Sidebar({ isOpen, setIsOpen, selectedCategory, setSelectedCategory, vie
             nume: "Petshop & Animale",
             subcategorii: [
                 "Aspiratoare & Păr Animale",
-                "Hrănitoare Inteligente & Dozatoare",
+                "Dozatoare & Hrană",
                 "Toalete Inteligente Pisici",
                 "Accesorii & Îngrijire Animale"
             ]
