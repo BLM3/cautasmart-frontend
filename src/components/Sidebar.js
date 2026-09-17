@@ -22,6 +22,15 @@ function Sidebar({ isOpen, setIsOpen, selectedCategory, setSelectedCategory, vie
             ]
         },
         {
+            nume: "Îngrijire Personală",
+            subcategorii: [
+                "Plăci de păr & Perii de îndreptat",
+                "Uscătoare de păr",
+                "Aparate de tuns",
+                "Ondulatoare"
+            ]
+        },
+        {
             nume: "Home",
             subcategorii: [
                 "Aspiratoare Robot",
