@@ -16,7 +16,7 @@ function Sidebar({ isOpen, setIsOpen, selectedCategory, setSelectedCategory, vie
             nume: "Tech",
             subcategorii: [
                 "Televizoare OLED & LED",
-                "Telefoane Smart",
+                "Telefoane Apple",
                 "Tablete & E-readers",
                 "Audio & Căști Bluetooth"
             ]
