@@ -33,9 +33,9 @@ function Sidebar({ isOpen, setIsOpen, selectedCategory, setSelectedCategory, vie
         {
             nume: "Home",
             subcategorii: [
-                "Aspiratoare Robot",
-                "Climatizare & Purificatoare",
-                "Espressoare & Cafetiere",
+                "Aspiratoare Verticale",
+                "Purificatoare",
+                "Espressoare",
                 "Electrocasnice Mari"
             ]
         },
