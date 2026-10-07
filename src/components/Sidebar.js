@@ -45,40 +45,36 @@ function Sidebar({ isOpen, setIsOpen, selectedCategory, setSelectedCategory, vie
                 "Monitoare Gaming",
                 "Laptopuri & PC-uri",
                 "Periferice & Scaune Gaming",
-                "Console & Accesorii"
+                "Console"
             ]
         },
         {
             nume: "Fitness",
             subcategorii: [
-                "Ceasuri Smart & Brățări",
-                "Benzi de Alergat & Biciclete",
-                "Accesorii Recuperare"
+                "Ceasuri Smart & Brățări"
             ]
         },
         {
             nume: "Supraveghere & Securitate",
             subcategorii: [
                 "Camere Supraveghere",
-                "Sisteme de Alarmă",
-                "Smart Lock & Interfoane"
             ]
         },
-        {
+        /*{
             nume: "Unelte & Bricolaj",
             subcategorii: [
                 "Scule Cu Acumulator",
                 "Generatoare & Energie Solară",
                 "Echipamente Atelier"
             ]
-        },
+        },*/
         {
             nume: "Bebeluși & Copii",
             subcategorii: [
-                "Cărucioare & Scaune Auto",
-                "Monitorizare & Îngrijire",
+                "Scaune Auto",
+                /*"Monitorizare & Îngrijire",
                 "Jucării & Educație",
-                "Aparate & Hrănire Bebeluşi"
+                "Aparate & Hrănire Bebeluşi"*/
             ]
         },
         {
