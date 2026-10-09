@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- Cercul de fundal albastru -->
+  <circle cx="50" cy="50" r="48" fill="#2563EB" />
+  
+  <!-- Lupa stilizată cu bifă în interior -->
+  <circle cx="45" cy="45" r="20" stroke="#FFFFFF" stroke-width="8" fill="none" />
+  <line x1="60" y1="60" x2="78" y2="78" stroke="#FFFFFF" stroke-width="9" stroke-linecap="round" />
+  <path d="M 38 45 L 43 50 L 52 40" stroke="#10B981" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+</svg>
