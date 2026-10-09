@@ -6,9 +6,14 @@ function GuideCard({ guide, favorites = [], setFavorites, compareItems = [], set
     // Identificator unic pentru Ghid
     const guideSlug = guide.slug || guide.id;
 
+    // Stare locală pentru ghidul detaliat (încărcat la deschiderea modalului)
+    const [detailedGuide, setDetailedGuide] = useState(guide);
+    const [loadingDetails, setLoadingDetails] = useState(false);
+
     // Extragerea produsului cel mai bun (#1) din Ghid
-    const topProduct = (guide.items && guide.items.length > 0)
-        ? (guide.items.find(item => item.rank === 1) || guide.items[0])
+    const currentItems = detailedGuide.items || guide.items || [];
+    const topProduct = currentItems.length > 0
+        ? (currentItems.find(item => item.rank === 1) || currentItems[0])
         : null;
 
     // Identificator unic pentru produsul selectat (Ghid ID + Produs ID)
@@ -59,7 +64,7 @@ function GuideCard({ guide, favorites = [], setFavorites, compareItems = [], set
                 cons: topProduct.cons || [],
                 reviewSummary: topProduct.reviewSummary || topProduct.summary || guide.summary,
                 affiliateUrl: topProduct.affiliateUrl || topProduct.affiliateLink,
-                guideTitle: guide.title // Adăugăm titlul ghidului pentru referință
+                guideTitle: guide.title
             };
 
             setCompareItems([...compareItems, payload]);
@@ -69,10 +74,28 @@ function GuideCard({ guide, favorites = [], setFavorites, compareItems = [], set
         }
     };
 
-    const handleOpenModal = () => {
+    // Deschidere modal + încărcare automată a produselor din backend
+    const handleOpenModal = async () => {
         setIsModalOpen(true);
         if (addToRecentlyViewed) {
             addToRecentlyViewed(guide);
+        }
+
+        // Dacă nu avem deja încărcate produsele din top, le cerem de la backend
+        if (!detailedGuide.items || detailedGuide.items.length === 0) {
+            try {
+                setLoadingDetails(true);
+                const baseUrl = process.env.REACT_APP_API_URL || 'http://localhost:8080';
+                const response = await fetch(`${baseUrl}/api/v1/guides/${guideSlug}`);
+                if (response.ok) {
+                    const data = await response.json();
+                    setDetailedGuide(data);
+                }
+            } catch (error) {
+                console.error("Eroare la încărcarea detaliilor ghidului:", error);
+            } finally {
+                setLoadingDetails(false);
+            }
         }
     };
 
@@ -81,8 +104,8 @@ function GuideCard({ guide, favorites = [], setFavorites, compareItems = [], set
         ? guide.images
         : guide.bannerImageUrl
             ? [guide.bannerImageUrl]
-            : guide.items && guide.items.length > 0
-                ? guide.items.map(item => item.imageUrl).filter(Boolean)
+            : currentItems.length > 0
+                ? currentItems.map(item => item.imageUrl).filter(Boolean)
                 : ["https://placehold.co/400x250/e2e8f0/1e293b?text=Ghid+Cumparaturi"];
 
     const handlePrevImage = (e) => {
@@ -163,15 +186,10 @@ function GuideCard({ guide, favorites = [], setFavorites, compareItems = [], set
                 {/* CONȚINUT CARD */}
                 <div className="p-3 sm:p-5 flex flex-col flex-1 justify-between">
                     <div>
-                        {/* Meta Data: Dată + Număr Produse */}
+                        {/* Meta Data: Dată */}
                         <div className="flex items-center gap-2 text-xs text-gray-400 dark:text-gray-400 mb-2">
                             <Calendar size={13} />
                             <span>{guide.updatedAt ? new Date(guide.updatedAt).toLocaleDateString('ro-RO') : 'Recent'}</span>
-                            {guide.items && (
-                                <span className="font-semibold text-blue-600 dark:text-blue-400">
-                                    • Top {guide.items.length} Recomandări
-                                </span>
-                            )}
                         </div>
 
                         {/* Titlu Ghid */}
@@ -307,17 +325,24 @@ function GuideCard({ guide, favorites = [], setFavorites, compareItems = [], set
                                     {guide.summary || "Niciun rezumat disponibil."}
                                 </p>
 
-                                {guide.items && guide.items.length > 0 && (
+                                {/* SECȚIUNEA APERITIV TOP (SE ÎNCARCĂ DINAMIC) */}
+                                {loadingDetails ? (
+                                    <div className="mt-4 p-4 text-center text-xs text-blue-600 dark:text-blue-400 font-semibold animate-pulse bg-blue-50 dark:bg-blue-950/30 rounded-xl">
+                                        Se încarcă produsele din top...
+                                    </div>
+                                ) : detailedGuide.items && detailedGuide.items.length > 0 ? (
                                     <div className="mt-4">
                                         <h4 className="text-[11px] sm:text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-2">
-                                            Aperitiv Top ({guide.items.length} {guide.items.length === 1 ? 'produs' : 'produse'}):
+                                            Aperitiv Top ({detailedGuide.items.length} {detailedGuide.items.length === 1 ? 'produs' : 'produse'}):
                                         </h4>
                                         <div className="space-y-2 max-h-48 overflow-y-auto pr-1">
-                                            {guide.items.map((item, idx) => (
+                                            {detailedGuide.items.map((item, idx) => (
                                                 <div key={item.id || idx} className="flex items-center justify-between bg-gray-50 dark:bg-gray-900/40 p-2.5 rounded-xl text-xs border border-gray-100 dark:border-gray-700/50">
                                                     <div className="flex items-center gap-2 overflow-hidden">
                                                         <span className="font-extrabold text-blue-600 dark:text-blue-400 min-w-[20px]">#{item.rank || idx + 1}</span>
-                                                        <span className="truncate font-semibold text-gray-800 dark:text-gray-200">{item.productName || item.brand}</span>
+                                                        <span className="truncate font-semibold text-gray-800 dark:text-gray-200">
+                                                            {item.productName || item.brand || item.name}
+                                                        </span>
                                                     </div>
                                                     <span className="text-emerald-600 dark:text-emerald-400 font-bold ml-2 whitespace-nowrap">
                                                         {item.estimatedPrice ? `~${item.estimatedPrice} RON` : ''}
@@ -326,7 +351,7 @@ function GuideCard({ guide, favorites = [], setFavorites, compareItems = [], set
                                             ))}
                                         </div>
                                     </div>
-                                )}
+                                ) : null}
                             </div>
 
                             <div className="pt-4 border-t border-gray-100 dark:border-gray-700 flex items-center justify-between gap-2 mt-6">
