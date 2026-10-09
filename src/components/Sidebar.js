@@ -78,6 +78,27 @@ function Sidebar({ isOpen, setIsOpen, selectedCategory, setSelectedCategory, vie
             ]
         },
         {
+            nume: "Sănătate & Farma",
+            subcategorii: [
+                "Suplimente & Vitamine",
+                "Tensiometre & Aparate Medicale",
+                "Termometre & Nebulizatoare",
+                "Dispozitive Îngrijire Dentară",
+                "Optică & Picături Ochi"
+            ]
+        },
+        {
+            nume: "Cărți",
+            subcategorii: [
+                "Ficțiune & Bestsellers",
+                "Dezvoltare Personală & Psihologie",
+                "Cărți pentru Copii & Tineret",
+                "Business & Finanțe",
+                "Manga & Benzi Desenate",
+                "E-readers & Cărți Audio"
+            ]
+        },
+        {
             nume: "Petshop & Animale",
             subcategorii: [
                 "Aspiratoare & Păr Animale",
