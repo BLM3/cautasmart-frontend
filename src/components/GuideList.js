@@ -49,41 +49,6 @@ export default function GuideList({
     const [debouncedSearchTerm, setDebouncedSearchTerm] = useState(searchTerm);
     const [sortBy, setSortBy] = useState('');
 
-    const getGuidePrice = (guide, type = 'min') => {
-        if (!guide.items || guide.items.length === 0) return 0;
-        const prices = guide.items
-            .map(item => item.estimatedPrice)
-            .filter(price => price !== null && price !== undefined);
-
-        if (prices.length === 0) return 0;
-        return type === 'min' ? Math.min(...prices) : Math.max(...prices);
-    };
-
-    // Aplicăm sortarea pe ghiduri
-    const sortedGuides = React.useMemo(() => {
-        let list = [...guides];
-
-        switch (sortBy) {
-            case 'price_asc':
-                return list.sort((a, b) => getGuidePrice(a, 'min') - getGuidePrice(b, 'min'));
-
-            case 'price_desc':
-                return list.sort((a, b) => getGuidePrice(b, 'max') - getGuidePrice(a, 'max'));
-
-            case 'views_desc':
-                // Sortează descending după viewsCount (cele mai multe vizualizări primele)
-                return list.sort((a, b) => {
-                    // Verificăm atât viewsCount cât și views_count pentru siguranță
-                    const viewsA = a.viewsCount ?? a.views_count ?? 0;
-                    const viewsB = b.viewsCount ?? b.views_count ?? 0;
-                    return viewsB - viewsA; // Descrescător: cele mai mari primele
-                });
-
-                default:
-                // Păstrează ordinea din backend
-                return list;
-        }
-    }, [guides, sortBy]);
     const [recentlyViewed, setRecentlyViewed] = useState(() => {
         const saved = localStorage.getItem("recentlyViewed");
         return saved ? JSON.parse(saved) : [];
@@ -160,13 +125,14 @@ export default function GuideList({
                     endpoint = `${baseUrl}/api/v1/guides/search`;
                 }
 
+                // Trimitem sortBy la backend ca 'sortBy'
                 const response = await axios.get(endpoint, {
                     params: {
                         ...(debouncedSearchTerm ? { q: debouncedSearchTerm } : {}),
                         ...(selectedCategory && selectedCategory !== 'All' ? { category: selectedCategory } : {}),
                         page: page,
                         size: 10,
-                        ...(sortBy ? { sort: sortBy } : {})
+                        ...(sortBy ? { sortBy: sortBy } : {})
                     }
                 });
 
@@ -176,7 +142,6 @@ export default function GuideList({
                     ? response.data
                     : (response.data && Array.isArray(response.data.content) ? response.data.content : []);
 
-                // Filtrare de siguranță pentru a elimina obiecte goale
                 const validDataArray = dataArray.filter(g => g && (g.id || g.slug || g.title));
 
                 if (validDataArray.length === 0) {
@@ -215,7 +180,7 @@ export default function GuideList({
         };
     }, [page, debouncedSearchTerm, selectedCategory, sortBy]);
 
-    // Adăugare în recent vizionate (Prevenire duplicate)
+    // Adăugare în recent vizionate
     const addToRecentlyViewed = (guide) => {
         setRecentlyViewed(prevItems => {
             const filtered = prevItems.filter(item => {
@@ -326,8 +291,8 @@ export default function GuideList({
                 key={`${debouncedSearchTerm}-${selectedCategory}-${sortBy}`}
                 className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6 items-stretch my-6"
             >
-                {sortedGuides.map((guide, index) => {
-                    const isLast = sortedGuides.length === index + 1;
+                {guides.map((guide, index) => {
+                    const isLast = guides.length === index + 1;
                     return (
                         <motion.div
                             variants={itemVariants}
